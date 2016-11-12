@@ -4,7 +4,8 @@ import time
 
 
 def random_list(size, max_value, seed):
-    random.seed(seed)
+    if(seed):
+        random.seed(seed)
     r_list = []
     for i in range(0, size):
         r_list.append(random.randint(0, max_value))
@@ -26,10 +27,9 @@ def get_primes(num_list):
 
 
 def write_primes(file_name, primes):
-    file = open(file_name, 'w')
-    for p in primes:
-        file.write(str(p) + '\n')
-    file.close()
+    with open(file_name, 'w') as file:
+        for p in primes:
+            file.write(str(p) + '\n' if p is not None else "")
 
 
 def write_execution_time(file_name, time):
@@ -42,11 +42,12 @@ if __name__ == '__main__':
     max_value = int(sys.argv[2])
     random_seed = int(sys.argv[3])
     file_name = sys.argv[4]
+    r_list = random_list(size, max_value, random_seed)
 
     start_time = time.clock()
-    write_primes(
-        file_name,
-        get_primes(random_list(size, max_value, random_seed))
-    )
+
+    primes = get_primes(r_list)
+
+    write_primes(file_name, primes)
     end_time = time.clock() - start_time
     write_execution_time(file_name, end_time)
